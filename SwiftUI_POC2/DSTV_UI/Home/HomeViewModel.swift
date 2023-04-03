@@ -21,6 +21,8 @@ class HomeViewModel: ObservableObject{
         .init(id: .myList, sectionTitle: "My List", items: [], selected: false),
         .init(id: .settings, sectionTitle: "Settings", items: [], selected: false),
     ]
+
+  
 }
 
 enum AppSection {

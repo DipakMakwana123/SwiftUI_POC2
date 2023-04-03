@@ -20,7 +20,6 @@ class CombineViewModal {
     var cancellables = Set<AnyCancellable>()
     
     func getUsers() -> AnyPublisher<Employee,Never>?{
-        
         guard let url = URL(string:"\(BaseURL.url)\(EndPoint.employees)") else {return nil}
         return URLSession.shared.dataTaskPublisher(for: url)
             .map { $0.data}

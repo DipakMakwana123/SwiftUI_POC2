@@ -9,13 +9,10 @@ import SwiftUI
 enum FocusField: Hashable {
     case fieldId(Int)
 }
-//protocol BaseView: View {
-//    var body: View {get set}
-//}
-
 struct ContentView: View {
     @State private var viewModel =  HomeViewModel()
-
+    private let viewModal = CombineViewModal(apiManager:APIManager())
+    
     var body: some View {
         NavigationView {
             HStack(){
@@ -28,9 +25,29 @@ struct ContentView: View {
                 }
             }
             .onAppear{
-
+                getEmployeesByCombine()
             }
         }
+    }
+    private func getEmployeesByCombine(){
+
+        guard let result = viewModal.getUsers() else {return }
+        result.sink {  items in
+
+            debugPrint(items)
+            //self?.reloadData()
+            DispatchQueue.main.async {
+                if let data = items.data, data.isEmpty {
+                   // self?.tableView?.setEmptyMessage(ErrorMessages.noData)
+                }
+                else {
+                    self.viewModal.employees = items
+                    //self?.tableView?.restore()
+                  //  self?.reloadData()
+                }
+            }
+        }
+        .store(in: &viewModal.cancellables)
     }
 }
 
