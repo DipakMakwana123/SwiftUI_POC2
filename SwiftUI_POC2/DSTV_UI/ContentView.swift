@@ -11,10 +11,10 @@ enum FocusField: Hashable {
 }
 struct ContentView: View {
     @State private var viewModel =  HomeViewModel()
-    private let viewModal = CombineViewModal(apiManager:APIManager())
+    private let viewModal = CombineViewModal(apiManager: APIManager())
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             HStack(){
                 VStack {
                     menuBar
@@ -23,14 +23,13 @@ struct ContentView: View {
                 VStack {
                     listView
                 }
-            }
+            }.background(.black)
             .onAppear{
                 getEmployeesByCombine()
             }
         }
     }
-    private func getEmployeesByCombine(){
-
+    private func getEmployeesByCombine() {
         guard let result = viewModal.getUsers() else {return }
         result.sink {  items in
 
@@ -52,84 +51,54 @@ struct ContentView: View {
 }
 
 extension ContentView {
-    var menuBar: some View{
+
+    var menuBar: some View {
         VStack {
             HStack {
                 ProfileView().focusable()
                 SearchView().focusable()
             }.frame(height: 200).focusable(true)
             List {
-
-                // TODO: Need to improve 
-                ForEach(viewModel.items) { item in
-                    // Hide disclosure indicator Code Start
-                    VStack(alignment: .leading) {
-
-                        if (item.id == .liveTV) {
-                            NavigationLink(destination: LiveTVView()) {
-                                    EmptyView()
-                                }
-                                .opacity(0)
-                        }
-                        else if (item.id == .tvShows) {
-                            NavigationLink(
-                                destination: TvShowView()) {
-                                    EmptyView()
-                                }
-                                .opacity(0)
-                        }
-                        else if (item.id == .kids) {
-                            NavigationLink(
-                                destination: KidsView()) {
-                                    EmptyView()
-                                }
-                                .opacity(0)
-                        }
-                        else if (item.id == .myList) {
-                            NavigationLink(
-                                destination: MyListView()) {
-                                    EmptyView()
-                                }
-                                .opacity(0)
-                        }
-                        else if (item.id == .sports) {
-                            NavigationLink(
-                                destination: SportsView()) {
-                                    EmptyView()
-                                }
-                                .opacity(0)
-                        }
-
-                        else if (item.id == .movies) {
-                            NavigationLink(
-                                destination: MoviesMainView()) {
-                                    EmptyView()
-                                }
-                                .opacity(0)
-                        }
-                        else if (item.id == .channel) {
-                            NavigationLink(
-                                destination: ChannelMainView()) {
-                                    EmptyView()
-                                }
-                                .opacity(0)
-                        }
-                        else if (item.id == .settings) {
-                            NavigationLink(
-                                destination: SettingMainView()) {
-                                    EmptyView()
-                                }
-                                .opacity(0)
-                        }
-                        LabelView(item: item)
-                    }.background(.clear)
-                    // Hide disclosure indicator Code End
-                }
-                .listRowBackground(Color.black)
+                navigationToView()
+                    .listRowBackground(Color.black)
             }
-
-        }
+        }.frame(height:UIScreen.main.bounds.height)
         .background(.black)
+    }
+
+    private func  navigationToView() -> some View {
+        ForEach(viewModel.items) { item in
+            // Hide disclosure indicator Code Start
+            VStack(alignment: .leading) {
+                // TODO: Need to improve
+                if (item.id == .liveTV) {
+                    NavigationLink(destination: LiveTVView()) { EmptyView() }.opacity(0)
+                }
+                else if (item.id == .tvShows) {
+                    NavigationLink(destination: TvShowView()) { EmptyView() }.opacity(0)
+                }
+                else if (item.id == .kids) {
+                    NavigationLink(destination: KidsView()) { EmptyView() }.opacity(0)
+                }
+                else if (item.id == .myList) {
+                    NavigationLink(destination: MyListView()) { EmptyView() }.opacity(0)
+                }
+                else if (item.id == .sports) {
+                    NavigationLink(destination: SportsView()) { EmptyView() }.opacity(0)
+                }
+                else if (item.id == .movies) {
+                    NavigationLink(destination: MoviesMainView()) { EmptyView() }.opacity(0)
+                }
+                else if (item.id == .channel) {
+                    NavigationLink(destination: ChannelMainView()) { EmptyView() }.opacity(0)
+                }
+                else if (item.id == .settings) {
+                    NavigationLink(destination: SettingMainView()) { EmptyView() }.opacity(0)
+                }
+                LabelView(item: item)
+            }.background(.black)
+            // Hide disclosure indicator Code End
+        }
     }
 
     var listView: some View {
