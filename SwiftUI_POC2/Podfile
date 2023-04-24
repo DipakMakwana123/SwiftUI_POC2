@@ -1,0 +1,37 @@
+workspace 'SwiftUI_POC2'
+source 'https://github.com/CocoaPods/Specs.git'
+use_frameworks!
+
+def available_pods
+    pod 'Analytics', '~> 3.0'
+end
+
+def ios_pods
+    pod 'Firebase/Analytics'
+end
+
+
+
+target 'DSTV_UI' do
+    platform :ios, '13.0'
+    available_pods
+    available_pods
+    
+    target 'DSTV_UITests' do
+        platform :ios, '13.0'
+        inherit! :search_paths
+    end
+end
+
+
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            if ['URITemplate'].include? target.name
+                config.build_settings['SWIFT_VERSION'] = '4.0'
+            else
+                config.build_settings['SWIFT_VERSION'] = '5.0'
+            end
+        end
+    end
+end
